@@ -6,7 +6,7 @@ import StepFinancial from "./components/StepFinancial";
 import StepPolicy from "./components/StepPolicy";
 import ResultPanel from "./components/ResultPanel";
 import ProgressBar from "./components/ProgressBar";
-
+import { useEffect } from "react";
 const STEPS = [
   { id: 1, label: "Personal", icon: "👤" },
   { id: 2, label: "Health", icon: "🏥" },
@@ -71,7 +71,20 @@ export default function App() {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    const wakeUpServer = async () => {
+      for (let i = 0; i < 3; i++) {
+        try {
+          await fetch(`${process.env.REACT_APP_API_URL}/health`);
+          break;
+        } catch {
+          await new Promise((r) => setTimeout(r, 2000));
+        }
+      }
+    };
 
+    wakeUpServer();
+  }, []);
   const reset = () => {
     setShowResult(false);
     setResult(null);
